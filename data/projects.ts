@@ -1,10 +1,11 @@
-export type ProjectImage = { src: string; alt: string };
+export type ProjectImage = { src: string; alt: string; type?: 'image' | 'video'; id?: string; name?: string };
 export type Project = {
   id: string; title: string; category: string; year: string | null;
   client: string | null; description: string; images: ProjectImage[];
   placeholder: boolean; layout: 'featured' | 'portrait' | 'wide' | 'compact';
   art: 'dota' | 'stream' | 'social' | 'identity'; coverText: string;
 };
+export type ManagedProject = Project & { status: 'draft' | 'published'; updatedAt: number };
 // Add images to public/projects, fill this record, and set placeholder to false.
 export const projects: Project[] = [
   { id: 'dota', title: 'Всё начинается с клика', category: 'DOTA 2 / ПРЕВЬЮ', year: null, client: null, description: 'Здесь появится подборка превью для Dota 2. Сейчас это демонстрационный разворот: настоящие изображения и описание проекта будут добавлены позже.', images: [], placeholder: true, layout: 'featured', art: 'dota', coverText: 'NEXT\nLEVEL' },

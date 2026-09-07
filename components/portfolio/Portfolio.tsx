@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { ArrowDown, ArrowUpRight, ArrowUp, Plus, Minus, Pause, Play, Menu, X } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogTrigger, DialogClose } from '@/components/ui/dialog';
 import { clients } from '@/data/clients';
-import { projects } from '@/data/projects';
+import type { Project } from '@/data/projects';
 import { navigation, services, site } from '@/data/site';
 import { AnimatedCat, LoopVideo } from './Media';
 import { ProjectArt } from './ProjectArt';
@@ -13,7 +13,7 @@ import { ProjectViewer } from './ProjectViewer';
 function Chapter({ number, title }: { number: string; title: string }) {
   return <div className="chapter-line"><span className="mono">ГЛАВА {number}</span><span className="chapter-rule" /><span className="mono">{title}</span></div>;
 }
-export function Portfolio() {
+export function Portfolio({ projects }: { projects: Project[] }) {
   const [paused, setPaused] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [service, setService] = useState<number | null>(0);
@@ -41,7 +41,7 @@ export function Portfolio() {
     };
     sync(); window.addEventListener('popstate', sync);
     return () => window.removeEventListener('popstate', sync);
-  }, []);
+  }, [projects]);
   const openProject = (index: number) => {
     clickedProject.current = document.activeElement as HTMLElement;
     window.history.pushState(null, '', `#project/${projects[index].id}`);
@@ -76,10 +76,10 @@ export function Portfolio() {
       <section id="work" className="work-section section-pad">
         <Chapter number="01" title="АРХИВ РАБОТ" />
         <div className="work-heading reveal"><h2>ВЫБРАННЫЕ<br /><span className="outline-type">РАБОТЫ</span><sup>({String(projects.length).padStart(2, '0')})</sup></h2><p>Каждая работа:<br />отдельная история.</p></div>
-        <div className="archive-notice"><span className="red">*</span> Архив пополняется. Пока здесь демонстрационные обложки.</div>
+        {projects.every(project => project.placeholder) && <div className="archive-notice"><span className="red">*</span> Архив пополняется. Пока здесь демонстрационные обложки.</div>}
         <div className="work-grid">{projects.map((project, index) => <article key={project.id} className={`project-card project-${project.layout} reveal`}>
           <button className="project-open" onClick={() => openProject(index)} aria-label={`Открыть проект: ${project.title}`}>
-            {project.images.length ? <img src={project.images[0].src} alt={project.images[0].alt} loading="lazy" width={1200} height={800} /> : <ProjectArt project={project} />}
+            {project.images.length ? project.images[0].type === 'video' ? <video src={`${project.images[0].src}#t=0.1`} muted playsInline preload="metadata" aria-label={project.images[0].alt} /> : <img src={project.images[0].src} alt={project.images[0].alt} loading="lazy" width={1200} height={800} /> : <ProjectArt project={project} />}
             <span className="project-view">Смотреть <ArrowUpRight size={18} /></span>
           </button>
           <div className="project-caption"><div><span className="mono">{String(index + 1).padStart(2, '0')} / {project.category}</span><h3><button onClick={() => openProject(index)}>{project.title}</button></h3></div><ArrowUpRight size={24} aria-hidden="true" /></div>
@@ -117,6 +117,6 @@ export function Portfolio() {
       </section>
     </main>
     <footer className="footer"><a href="#top" className="wordmark">SXCRED<span>®</span></a><span className="mono">© {site.year} SXCRED</span><a href="#top" className="back-top">Наверх <ArrowUp size={16} /></a></footer>
-    <ProjectViewer index={projectIndex} open={viewerOpen} onClose={closeProject} onProject={nextProject} />
+    <ProjectViewer projects={projects} index={projectIndex} open={viewerOpen} onClose={closeProject} onProject={nextProject} />
   </div>;
 }

@@ -1,10 +1,11 @@
 'use client';
+/* oxlint-disable jsx-a11y/media-has-caption -- Uploaded videos showcase visual design; no caption track is supplied by the author. */
 import { useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight, X } from 'lucide-react';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
-import { projects } from '@/data/projects';
+import type { Project } from '@/data/projects';
 import { ProjectArt } from './ProjectArt';
-export function ProjectViewer({ index, open, onClose, onProject }: { index: number; open: boolean; onClose: () => void; onProject: (index: number) => void }) {
+export function ProjectViewer({ projects, index, open, onClose, onProject }: { projects: Project[]; index: number; open: boolean; onClose: () => void; onProject: (index: number) => void }) {
   const [gallery, setGallery] = useState({ project: index, slide: 0, failed: false });
   const swipe = useRef<{ x: number; y: number } | null>(null);
   const project = projects[index];
@@ -30,7 +31,7 @@ export function ProjectViewer({ index, open, onClose, onProject }: { index: numb
         }}>
           {/* Media are local, pre-optimized files; this viewer preserves their original proportions. */}
           {/* oxlint-disable-next-line next/no-img-element */}
-          {project.images.length > 0 && !failed ? <img key={project.images[currentSlide].src} src={project.images[currentSlide].src} alt={project.images[currentSlide].alt} onError={() => setGallery({ project: index, slide: currentSlide, failed: true })} /> : <ProjectArt project={project} detail={currentSlide > 0} />}
+          {project.images.length > 0 && !failed ? project.images[currentSlide].type === 'video' ? <video key={project.images[currentSlide].src} src={project.images[currentSlide].src} controls playsInline preload="metadata" aria-label={project.images[currentSlide].alt} onError={() => setGallery({ project: index, slide: currentSlide, failed: true })} /> : <img key={project.images[currentSlide].src} src={project.images[currentSlide].src} alt={project.images[currentSlide].alt} onError={() => setGallery({ project: index, slide: currentSlide, failed: true })} /> : <ProjectArt project={project} detail={currentSlide > 0} />}
           {failed && <output className="image-error">Изображение недоступно. Попробуйте следующий кадр.</output>}
         </div>
         <div className="gallery-controls"><button onClick={() => changeSlide(-1)} aria-label="Предыдущее изображение"><ArrowLeft /></button><span className="mono" aria-live="polite">{String(currentSlide + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}</span><button onClick={() => changeSlide(1)} aria-label="Следующее изображение"><ArrowRight /></button></div>
