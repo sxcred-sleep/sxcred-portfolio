@@ -11,17 +11,50 @@ export async function GET(
       'SELECT media.key, media.mime, media.size, works.status FROM media LEFT JOIN works ON works.id = media.project_id WHERE media.id = ?',
     )
       .bind(id)
-      .first<{ key: string; mime: string; size: number; status: string | null }>();
-    if (!row || (row.status !== 'published' && !(await signedIn(request))))
+      .first<{
+        key: string;
+        mime: string;
+        size: number;
+        status: string | null;
+      }>();
+    const isAvatar =
+      row &&
+      (await DB.prepare(
+        "SELECT 1 FROM site_content, json_each(site_content.data) AS client WHERE site_content.key = 'clients' AND json_extract(client.value, '$.avatarId') = ? LIMIT 1",
+      )
+        .bind(id)
+        .first());
+    if (
+      !row ||
+      (row.status !== 'published' && !isAvatar && !(await signedIn(request)))
+    )
       throw new HttpError(404, 'Файл не найден.');
     const requestedRange = request.headers.get('range');
     let range: { offset: number; length: number } | undefined;
     if (requestedRange) {
       const match = /^bytes=(\d*)-(\d*)$/.exec(requestedRange);
-      const start = match?.[1] ? Number(match[1]) : Math.max(0, row.size - Number(match?.[2]));
-      const end = match?.[1] && match[2] ? Math.min(row.size - 1, Number(match[2])) : row.size - 1;
-      if (!match || (!match[1] && !match[2]) || !Number.isSafeInteger(start) || !Number.isSafeInteger(end) || start > end || start >= row.size) {
-        return new Response(null, { status: 416, headers: { 'Content-Range': `bytes */${row.size}`, 'Cache-Control': 'no-store' } });
+      const start = match?.[1]
+        ? Number(match[1])
+        : Math.max(0, row.size - Number(match?.[2]));
+      const end =
+        match?.[1] && match[2]
+          ? Math.min(row.size - 1, Number(match[2]))
+          : row.size - 1;
+      if (
+        !match ||
+        (!match[1] && !match[2]) ||
+        !Number.isSafeInteger(start) ||
+        !Number.isSafeInteger(end) ||
+        start > end ||
+        start >= row.size
+      ) {
+        return new Response(null, {
+          status: 416,
+          headers: {
+            'Content-Range': `bytes */${row.size}`,
+            'Cache-Control': 'no-store',
+          },
+        });
       }
       range = { offset: start, length: end - start + 1 };
     }
@@ -36,7 +69,8 @@ export async function GET(
     });
     let status = 200;
     if (
-      range && object.range &&
+      range &&
+      object.range &&
       'offset' in object.range &&
       object.range.offset !== undefined
     ) {

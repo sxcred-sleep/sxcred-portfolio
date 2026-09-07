@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ArrowDown, ArrowUpRight, ArrowUp, Plus, Minus, Pause, Play, Menu, X } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogTrigger, DialogClose } from '@/components/ui/dialog';
-import { clients } from '@/data/clients';
+import type { ManagedClient } from '@/data/clients';
 import type { Project } from '@/data/projects';
 import { navigation, services, site } from '@/data/site';
 import { AnimatedCat, LoopVideo } from './Media';
@@ -13,7 +13,7 @@ import { ProjectViewer } from './ProjectViewer';
 function Chapter({ number, title }: { number: string; title: string }) {
   return <div className="chapter-line"><span className="mono">ГЛАВА {number}</span><span className="chapter-rule" /><span className="mono">{title}</span></div>;
 }
-export function Portfolio({ projects }: { projects: Project[] }) {
+export function Portfolio({ projects, clients }: { projects: Project[]; clients: ManagedClient[] }) {
   const [paused, setPaused] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [service, setService] = useState<number | null>(0);
@@ -89,8 +89,8 @@ export function Portfolio({ projects }: { projects: Project[] }) {
       <section id="clients" className="clients-section section-pad">
         <Chapter number="02" title="В ОДНОЙ КОМАНДЕ" />
         <div className="clients-intro reveal"><span className="roster-word" aria-hidden="true">PARTY</span><h2>ТЕ, С КЕМ<br />НА ОДНОЙ ВОЛНЕ.</h2></div>
-        <div className="client-roster">{clients.map((client, index) => <article className="client-cell reveal" key={client.name}>
-          <div className="client-cell-top mono"><span>ИГРОК / 0{index + 1}</span><span>↗</span></div>
+        <div className="client-roster">{clients.map((client, index) => <article className="client-cell reveal" key={client.id}>
+          <div className="client-cell-top mono"><span>ИГРОК / {String(index + 1).padStart(2, '0')}</span><span>↗</span></div>
           <div className={`client-avatar avatar-${index}`} aria-label={client.avatar ? undefined : `Место для аватара ${client.name}`}>
             {client.avatar ? <img src={client.avatar} alt={client.name} loading="lazy" width={400} height={400} /> : <><span className="avatar-letter">{client.name.slice(0, 1).toUpperCase()}</span><span className="mono avatar-label">АВАТАР СКОРО</span></>}
           </div>

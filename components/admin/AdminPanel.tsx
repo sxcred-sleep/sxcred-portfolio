@@ -16,6 +16,7 @@ import {
   X,
 } from 'lucide-react';
 import type { ManagedProject, ProjectImage } from '@/data/projects';
+import { ClientManager } from './ClientManager';
 
 type Draft = Pick<
   ManagedProject,
@@ -78,7 +79,8 @@ function Preview({ file }: { file: ProjectImage }) {
     />
   );
 }
-export function AdminPanel() {
+export function AdminPanel({ view = 'works' }: { view?: 'works' | 'clients' }) {
+  const [clientsDirty, setClientsDirty] = useState(false);
   const [auth, setAuth] = useState<
     'loading' | 'login' | 'ready' | 'unconfigured' | 'error'
   >('loading');
@@ -192,7 +194,11 @@ export function AdminPanel() {
     }
   }
   async function signOut() {
-    if (dirty && !window.confirm('Выйти без сохранения изменений?')) return;
+    if (
+      (dirty || clientsDirty) &&
+      !window.confirm('Выйти без сохранения изменений?')
+    )
+      return;
     setBusy(true);
     setError('');
     try {
@@ -388,6 +394,19 @@ export function AdminPanel() {
           </button>
         )}
       </header>
+      {auth === 'ready' && (
+        <nav className="admin-section-tabs" aria-label="Разделы панели">
+          <a href="/admin" aria-current={view === 'works' ? 'page' : undefined}>
+            01 / Работы
+          </a>
+          <a
+            href="/admin/clients"
+            aria-current={view === 'clients' ? 'page' : undefined}
+          >
+            02 / Стримеры
+          </a>
+        </nav>
+      )}
       {auth !== 'ready' ? (
         <main className="admin-login">
           <span className="admin-eyebrow">SXCRED / ВХОД</span>
@@ -427,6 +446,8 @@ export function AdminPanel() {
             </form>
           )}
         </main>
+      ) : view === 'clients' ? (
+        <ClientManager onDirty={setClientsDirty} />
       ) : (
         <main className="admin-workspace">
           <aside className="admin-library">
@@ -534,7 +555,9 @@ export function AdminPanel() {
                         'СОЦСЕТИ / ПРОМО',
                         'АЙДЕНТИКА / КИБЕРСПОРТ',
                       ].map((value) => (
-                        <option value={value} key={value}>{value}</option>
+                        <option value={value} key={value}>
+                          {value}
+                        </option>
                       ))}
                     </datalist>
                   </label>

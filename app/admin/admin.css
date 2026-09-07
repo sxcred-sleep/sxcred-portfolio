@@ -566,3 +566,26 @@
     font-size: 44px;
   }
 }
+.admin-section-tabs { display:flex; gap:30px; padding:0 4%; border-bottom:1px solid #c9c9c4; background:#f8f8f4; }
+.admin-section-tabs a { padding:18px 0 15px; border-bottom:3px solid transparent; font-size:14px; color:#686864; }
+.admin-section-tabs a[aria-current=page] { border-color:#a52929; color:#171717; font-weight:700; }
+.admin-roster-editor { max-width:1120px; padding:38px 4% 0; margin:auto; }
+.admin-roster-editor h1 { font-family:var(--font-display),sans-serif; font-size:clamp(28px,3.5vw,44px); margin:12px 0; line-height:1.2; }
+.admin-roster-editor .admin-editor-heading p { font-size:14px; color:#686864; line-height:1.6; }
+.admin-roster-fields { border:0; padding:0; margin:0; min-width:0; display:grid; gap:22px; }
+.admin-client-editor { border:1px solid #c9c9c4; background:#f8f8f4; }
+.admin-client-top { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 20px; border-bottom:1px solid #c9c9c4; }
+.admin-client-top>div { display:flex; gap:7px; }
+.admin-client-body { display:grid; grid-template-columns:220px minmax(0,1fr); gap:30px; padding:24px; }
+.admin-avatar-preview { width:100%; aspect-ratio:1; background:#deded8; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+.admin-avatar-preview img { width:100%; height:100%; object-fit:cover; }
+.admin-avatar-preview>span { font-family:var(--font-display),sans-serif; font-size:100px; }
+.admin-avatar-upload { position:relative; width:100%; margin-top:12px; cursor:pointer; }
+.admin-avatar-upload input { position:absolute; width:1px; height:1px; opacity:0; }
+.admin-avatar-upload:focus-within { outline:2px solid #b62525; outline-offset:3px; }
+.admin-avatar-editor>small,.admin-client-body label>small { display:block; font-size:12px; color:#6c6c68; line-height:1.6; margin-top:8px; font-weight:400; }
+.admin-avatar-remove { display:flex; align-items:center; gap:6px; background:transparent; font-size:12px!important; margin-top:12px; text-decoration:underline; text-underline-offset:3px; }
+.admin-add-client { justify-self:start; }
+.admin-roster-empty { padding:40px; display:flex; gap:16px; align-items:center; border:1px dashed #aaa; color:#686864; }
+.admin-roster-editor .admin-save-bar { justify-content:space-between; }
+@media(max-width:650px) { .admin-section-tabs { padding:0 20px; gap:24px; }.admin-roster-editor { padding:28px 20px 0; }.admin-roster-editor .admin-editor-heading { display:block; }.admin-roster-editor .admin-site-link { margin-top:15px; }.admin-client-top { padding:12px 14px; }.admin-client-body { grid-template-columns:1fr; gap:24px; padding:18px; }.admin-avatar-editor { max-width:220px; }.admin-roster-editor .admin-save-bar { gap:12px; }.admin-roster-editor .admin-status { white-space:normal; width:100%; } }

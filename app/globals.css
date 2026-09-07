@@ -125,7 +125,7 @@ svg { flex-shrink: 0; }
 .roster-word { position: absolute; left: 0; font-family: var(--display); font-size: clamp(100px,16vw,250px); letter-spacing: -.06em; font-weight: 700; line-height: 1; color: #d8d8d1; }
 .clients-intro h2 { position: relative; font-family: var(--display); font-size: clamp(42px,4.8vw,76px); line-height: 1.14; font-weight: 500; margin-right: 5%; letter-spacing: -.03em; }
 .client-roster { display: grid; grid-template-columns: 1.14fr 1fr .94fr; border: 1px solid var(--ink); position: relative; }
-.client-cell { padding: 18px; border-right: 1px solid var(--ink); min-width: 0; }.client-cell:last-child { border: 0; }
+.client-cell { padding: 18px; border-right: 1px solid var(--ink); border-bottom: 1px solid var(--ink); min-width: 0; }.client-cell:last-child { border-right: 0; }.client-name h3 { overflow-wrap: anywhere; }
 .client-cell-top { display: flex; justify-content: space-between; padding-bottom: 17px; }
 .client-avatar { height: 245px; position: relative; background: #e0e0da; overflow: hidden; display: flex; justify-content: center; align-items: center; }
 .avatar-letter { font-family: var(--display); font-size: 210px; font-weight: 650; line-height: 1; color: transparent; -webkit-text-stroke: 1px #73736a; transform: rotate(-10deg); transition: transform 240ms var(--ease); }

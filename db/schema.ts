@@ -28,3 +28,8 @@ export const attempts = sqliteTable('login_attempts', {
   count: integer('count').notNull(),
   expiresAt: integer('expires_at').notNull(),
 });
+export const siteContent = sqliteTable('site_content', {
+  key: text('key').primaryKey(),
+  data: text('data').notNull(),
+  revision: integer('revision').notNull().default(1),
+});
