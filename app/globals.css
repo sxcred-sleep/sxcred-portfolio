@@ -143,16 +143,17 @@ svg { flex-shrink: 0; }
 .clients-intro { position: relative; min-height: 175px; margin: 50px 0 25px; display: flex; align-items: center; justify-content: flex-end; }
 .roster-word { position: absolute; left: 0; font-family: var(--display); font-size: clamp(100px,16vw,250px); letter-spacing: -.06em; font-weight: 700; line-height: 1; color: #d8d8d1; }
 .clients-intro h2 { position: relative; font-family: var(--display); font-size: clamp(42px,4.8vw,76px); line-height: 1.14; font-weight: 500; margin-right: 5%; letter-spacing: -.03em; }
-.client-roster { display: grid; grid-template-columns: 1.14fr 1fr .94fr; border: 1px solid var(--ink); position: relative; }
-.client-cell { padding: 18px; border-right: 1px solid var(--ink); border-bottom: 1px solid var(--ink); min-width: 0; }.client-cell:last-child { border-right: 0; }.client-name h3 { overflow-wrap: anywhere; }
-.client-cell-top { display: flex; justify-content: space-between; padding-bottom: 17px; }
-.client-avatar { height: 245px; position: relative; background: #e0e0da; overflow: hidden; display: flex; justify-content: center; align-items: center; }
-.avatar-letter { font-family: var(--display); font-size: 210px; font-weight: 650; line-height: 1; color: transparent; -webkit-text-stroke: 1px #73736a; transform: rotate(-10deg); transition: transform 240ms var(--ease); }
+.client-roster { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 1px; background: var(--ink); border: 1px solid var(--ink); position: relative; }
+.client-cell { display: grid; grid-template-columns: minmax(0,1fr) clamp(88px,7vw,128px); grid-template-areas: "meta meta" "name avatar"; gap: 18px; align-items: center; padding: 18px; background: #eeeee8; min-width: 0; }
+.client-cell-top { grid-area: meta; display: flex; justify-content: space-between; }
+.client-avatar { grid-area: avatar; width: 100%; aspect-ratio: 1; position: relative; background: #e0e0da; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+.avatar-letter { font-family: var(--display); font-size: clamp(76px,7vw,110px); font-weight: 650; line-height: 1; color: transparent; -webkit-text-stroke: 1px #73736a; transform: rotate(-10deg); transition: transform 240ms var(--ease); }
 .avatar-1 { background: #282826; }.avatar-1 .avatar-letter { color: #deded7; -webkit-text-stroke: 0; transform: rotate(5deg); }
 .avatar-2 { background: repeating-linear-gradient(-45deg,#deded7,#deded7 3px,#e8e8e1 3px,#e8e8e1 6px); }
-.avatar-label { position: absolute; bottom: 12px; left: 12px; font-size: 9px; background: #eeeee8; padding: 4px 7px; }
-.client-avatar img { height: 100%; width: 100%; object-fit: contain; object-position: right center; }
-.client-name { margin-top: 20px; }.client-name h3 { font-size: clamp(18px,2vw,32px); font-weight: 750; letter-spacing: -.04em; overflow-wrap: anywhere; }.client-name .mono { font-size: 10px; text-transform: uppercase; color: var(--muted); }
+.avatar-label { position: absolute; bottom: 5px; left: 4px; font-size: 7px; background: #eeeee8; padding: 3px; }
+.client-avatar.has-image { background: transparent; }
+.client-avatar img { height: 100%; width: 100%; object-fit: contain; object-position: center; }
+.client-name { grid-area: name; min-width: 0; }.client-name h3 { font-size: clamp(18px,1.6vw,26px); font-weight: 750; letter-spacing: -.04em; overflow-wrap: anywhere; }.client-name .mono { display: block; margin-top: 8px; font-size: 10px; text-transform: uppercase; color: var(--muted); }
 .clients-note { margin-top: 22px; text-align: right; font-size: 13px; }
 .section-title { margin: 48px 0 55px; }
 .services-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 30px; margin: 48px 0 45px; }
@@ -262,7 +263,7 @@ svg { flex-shrink: 0; }
 }
 @media (max-width: 1100px) {
   .cover-title { font-size: 22vw; top: 135px; }.cover-character { width: 91%; right: -19%; height: 82%; }.cover-copy { max-width: 260px; bottom: 125px; }.cover-side { display: none; }
-  .work-heading { padding-right: 0; }.client-avatar { height: 210px; }.avatar-letter { font-size: 180px; }.about-layout { gap: 6%; }
+  .work-heading { padding-right: 0; }.client-roster { grid-template-columns: repeat(2,minmax(0,1fr)); }.about-layout { gap: 6%; }
   .services-heading { align-items: flex-start; flex-direction: column; gap: 20px; }.services-heading>p { max-width: 460px; }
 }
 @media (max-width: 767px) {
@@ -283,7 +284,7 @@ svg { flex-shrink: 0; }
   .project-view { opacity: 1; transform: none; padding: 8px 10px; font-size: 10px; gap: 9px; bottom: 12px; right: 12px; }.project-caption { padding-top: 13px; }.project-caption .mono { font-size: 8px; }.project-caption h3 { font-size: 15px; }
   .archive-end { margin-top: 35px; font-size: 8px; gap: 16px; }
   .clients-intro { min-height: 140px; margin: 20px 0; align-items: flex-end; }.roster-word { font-size: 34vw; top: 0; }.clients-intro h2 { font-size: 9vw; margin-right: 0; }
-  .client-roster { grid-template-columns: 1fr; }.client-cell { border-right: 0; border-bottom: 1px solid var(--ink); display: grid; grid-template-columns: 105px 1fr; gap: 15px; padding: 16px; }.client-cell-top { grid-column: 1/-1; padding: 0; font-size: 9px; }.client-avatar { height: 110px; }.avatar-letter { font-size: 95px; }.avatar-label { font-size: 6px; left: 6px; bottom: 6px; }.client-name { align-self: center; margin: 0; min-width: 0; }.client-name h3 { font-size: clamp(18px,5.3vw,29px); }.client-name .mono { font-size: 9px; }.clients-note { font-size: 11px; text-align: left; }
+  .client-roster { grid-template-columns: 1fr; }.client-cell { grid-template-columns: minmax(0,1fr) 96px; gap: 15px; padding: 16px; }.client-cell-top { font-size: 9px; }.avatar-letter { font-size: 82px; }.client-name h3 { font-size: clamp(18px,5.3vw,26px); }.client-name .mono { font-size: 9px; }.clients-note { font-size: 11px; text-align: left; }
   .section-title { margin: 30px 0; }.services-heading { margin: 30px 0; }.service-grid { grid-template-columns: 1fr; gap: 16px; }.service-card-meta { margin-bottom: 24px; }.service-card h3 { font-size: clamp(29px,8vw,42px); }.service-price strong { font-size: 28px; }.service-terms { grid-template-columns: 1fr; gap: 14px; margin-top: 28px; padding-top: 22px; }.service-terms dl>div { grid-template-columns: 1fr; gap: 3px; }
   .about-layout { grid-template-columns: 1fr; gap: 50px; padding-top: 0; }.about-art { width: 82%; aspect-ratio: 1.05; margin-left: 3%; }.about-art-caption { font-size: 8vw; }.about-copy h2 { font-size: 14vw; }.about-copy .about-lead { font-size: 16px; }.about-facts>div { font-size: 9px; }
   .contact-section { padding-bottom: 175px; }.contact-heading { margin: 35px 0; }.contact-heading h2 { font-size: 19vw; }.contact-arrow { width: 17%; margin: 12px 0 0; }.contact-details { grid-template-columns: 1fr; gap: 30px; }.contact-details p { font-size: 14px; }.contact-details .muted { font-size: 11px; }.contact-links { gap: 15px 22px; }.contact-placeholder,.contact-links>a,.contact-links>.contact-copy { font-size: 14px; }.contact-tail { font-size: 8px; gap: 20px; }.contact-tail span:last-child { text-align: right; }

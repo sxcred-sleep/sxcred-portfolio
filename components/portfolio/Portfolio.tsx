@@ -118,10 +118,10 @@ export function Portfolio({ projects, clients, contacts }: { projects: Project[]
         <div className="clients-intro reveal"><span className="roster-word" aria-hidden="true">PARTY</span><h2>ТЕ, С КЕМ<br />НА ОДНОЙ ВОЛНЕ.</h2></div>
         <div className="client-roster">{clients.map((client, index) => <article className="client-cell reveal" key={client.id}>
           <div className="client-cell-top mono"><span>ИГРОК / {String(index + 1).padStart(2, '0')}</span><span>↗</span></div>
-          <div className={`client-avatar avatar-${index}`} aria-label={client.avatar ? undefined : `Место для аватара ${client.name}`}>
+          <div className="client-name"><h3>{client.link ? <a href={client.link} target="_blank" rel="noreferrer">{client.name}</a> : client.name}</h3><span className="mono">{client.workType || client.category}</span></div>
+          <div className={`client-avatar avatar-${index}${client.avatar ? ' has-image' : ''}`} aria-label={client.avatar ? undefined : `Место для аватара ${client.name}`}>
             {client.avatar ? <img src={client.avatar} alt={client.name} loading="lazy" width={400} height={400} /> : <><span className="avatar-letter">{client.name.slice(0, 1).toUpperCase()}</span><span className="mono avatar-label">АВАТАР СКОРО</span></>}
           </div>
-          <div className="client-name"><h3>{client.link ? <a href={client.link} target="_blank" rel="noreferrer">{client.name}</a> : client.name}</h3><span className="mono">{client.workType || client.category}</span></div>
         </article>)}</div><p className="clients-note">Разные стили игры. Один подход к визуалу.</p>
       </section>
       <section id="services" className="services-section section-pad" aria-labelledby="services-title">
