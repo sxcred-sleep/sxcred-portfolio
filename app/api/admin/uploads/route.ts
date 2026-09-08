@@ -1,22 +1,16 @@
 import { requireAdmin } from '@/lib/server/auth';
-import { failure, HttpError, json, runtime } from '@/lib/server/runtime';
-import { readUpload } from '@/lib/server/upload';
+import { failure, json, runtime } from '@/lib/server/runtime';
+import { storeUpload } from '@/lib/server/upload';
 export async function POST(request: Request) {
   try {
     await requireAdmin(request, true);
-    const { bytes, mime, size } = await readUpload(request);
-    if (
-      new URL(request.url).searchParams.get('purpose') === 'avatar' &&
-      (!mime.startsWith('image/') || size > 5 * 1024 * 1024)
-    )
-      throw new HttpError(400, 'Аватар должен быть изображением до 5 МБ.');
     const { DB, MEDIA } = runtime();
     const id = crypto.randomUUID();
     const key = `works/${id}`;
     const name = (
       new URL(request.url).searchParams.get('name') || 'Работа'
     ).slice(0, 200);
-    await MEDIA.put(key, bytes, { httpMetadata: { contentType: mime } });
+    const { mime, size } = await storeUpload(request, MEDIA, key, new URL(request.url).searchParams.get('purpose') === 'avatar');
     try {
       await DB.prepare(
         'INSERT INTO media (id, key, mime, name, size, created_at) VALUES (?, ?, ?, ?, ?, ?)',
