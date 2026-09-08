@@ -14,7 +14,7 @@ export function ProjectViewer({ projects, index, open, onClose, onProject }: { p
   const failed = gallery.project === index && gallery.failed;
   const changeSlide = (direction: number) => setGallery({ project: index, slide: (currentSlide + direction + total) % total, failed: false });
   return <Dialog open={open} onOpenChange={value => { if (!value) onClose(); }}>
-    <DialogContent className="portfolio-viewer" showCloseButton={false} onKeyDown={event => {
+    <DialogContent fullscreen className="portfolio-viewer" showCloseButton={false} onKeyDown={event => {
       if (event.key === 'ArrowRight') { event.preventDefault(); changeSlide(1); }
       if (event.key === 'ArrowLeft') { event.preventDefault(); changeSlide(-1); }
     }}>

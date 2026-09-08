@@ -11,6 +11,7 @@ import { AnimatedCat, LoopVideo } from './Media';
 import { ProjectArt } from './ProjectArt';
 import { ProjectViewer } from './ProjectViewer';
 import { DiscordContact } from './DiscordContact';
+import { Preloader } from './Preloader';
 
 function Chapter({ number, title }: { number: string; title: string }) {
   return <div className="chapter-line"><span className="mono">ГЛАВА {number}</span><span className="chapter-rule" /><span className="mono">{title}</span></div>;
@@ -18,11 +19,28 @@ function Chapter({ number, title }: { number: string; title: string }) {
 export function Portfolio({ projects, clients, contacts }: { projects: Project[]; clients: ManagedClient[]; contacts: Contact[] }) {
   const [paused, setPaused] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuDestination = useRef<string | null>(null);
   const [projectIndex, setProjectIndex] = useState(0);
   const [viewerOpen, setViewerOpen] = useState(false);
   const clickedProject = useRef<HTMLElement | null>(null);
   const pushed = useRef(false);
   const root = useRef<HTMLDivElement>(null);
+  const finishMenuChange = (open: boolean) => {
+    if (open || !menuDestination.current) return;
+    const href = menuDestination.current;
+    menuDestination.current = null;
+    // Navigate after the dialog releases its scroll lock and restores focus.
+    requestAnimationFrame(() => {
+      window.history.pushState(null, '', href);
+      document.getElementById(href.slice(1))?.scrollIntoView({ block: 'start' });
+    });
+  };
+  useEffect(() => {
+    const desktop = window.matchMedia('(min-width: 768px)');
+    const closeOnDesktop = () => { if (desktop.matches) setMenuOpen(false); };
+    desktop.addEventListener('change', closeOnDesktop);
+    return () => desktop.removeEventListener('change', closeOnDesktop);
+  }, []);
   useEffect(() => {
     const elements = root.current?.querySelectorAll('.reveal');
     if (!elements) return;
@@ -56,12 +74,13 @@ export function Portfolio({ projects, clients, contacts }: { projects: Project[]
   }, []);
   const nextProject = (index: number) => { window.history.replaceState(null, '', `#project/${projects[index].id}`); setProjectIndex(index); };
   return <div id="top" ref={root} className={`portfolio ${paused ? 'motion-paused' : ''}`}>
+    <Preloader />
     <a className="skip-link" href="#main">Перейти к содержимому</a>
     <header className="site-header">
       <a href="#top" className="wordmark" aria-label="SXCRED, в начало"><img className="brand-logo" src="/media/sxcred-manga-logo.png" alt="SXCRED" width={1980} height={792} /></a>
       <nav className="desktop-nav" aria-label="Основная навигация">{navigation.map(item => <a key={item.href} href={item.href}>{item.label}<sup>{item.number}</sup></a>)}</nav>
       <div className="header-actions"><button className="motion-toggle" onClick={() => setPaused(value => !value)} aria-label={paused ? 'Включить анимацию' : 'Приостановить анимацию'} aria-pressed={paused}>{paused ? <Play size={16} /> : <Pause size={16} />}<span>Анимация</span></button>
-      <Dialog open={menuOpen} onOpenChange={setMenuOpen}><DialogTrigger className="menu-trigger" aria-label="Открыть меню"><Menu /></DialogTrigger><DialogContent className="mobile-menu" showCloseButton={false}><div className="mobile-menu-head"><DialogTitle><img className="brand-logo" src="/media/sxcred-manga-logo.png" alt="SXCRED" width={1980} height={792} /></DialogTitle><DialogClose aria-label="Закрыть меню"><X /></DialogClose></div><DialogDescription className="sr-only">Навигация по главам портфолио</DialogDescription><nav aria-label="Мобильная навигация">{navigation.map(item => <a key={item.href} href={item.href} onClick={() => setMenuOpen(false)}><span className="mono">{item.number}</span>{item.label}<ArrowUpRight /></a>)}</nav><span className="mono">ПОРТФОЛИО / {site.year}</span></DialogContent></Dialog></div>
+      <Dialog open={menuOpen} onOpenChange={setMenuOpen} onOpenChangeComplete={finishMenuChange}><DialogTrigger className="menu-trigger" aria-label="Открыть меню"><Menu /></DialogTrigger><DialogContent fullscreen className="mobile-menu" showCloseButton={false}><div className="mobile-menu-head"><DialogTitle><img className="brand-logo" src="/media/sxcred-manga-logo.png" alt="SXCRED" width={1980} height={792} /></DialogTitle><DialogClose aria-label="Закрыть меню"><X /></DialogClose></div><DialogDescription className="sr-only">Навигация по главам портфолио</DialogDescription><nav aria-label="Мобильная навигация">{navigation.map(item => <a key={item.href} href={item.href} onClick={event => { event.preventDefault(); menuDestination.current = item.href; setMenuOpen(false); }}><span className="mono">{item.number}</span>{item.label}<ArrowUpRight /></a>)}</nav><span className="mono">ПОРТФОЛИО / {site.year}</span></DialogContent></Dialog></div>
     </header>
     <main id="main">
       <section className="cover" aria-labelledby="hero-title">
