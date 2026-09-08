@@ -38,7 +38,7 @@ const emptyDraft = (): Draft => ({
   year: String(new Date().getFullYear()),
   client: '',
   description: '',
-  layout: 'featured',
+  layout: 'original',
   images: [],
   status: 'draft',
 });
@@ -721,12 +721,22 @@ export function AdminPanel({ view = 'works' }: { view?: 'works' | 'clients' | 'c
                       edit({ layout: event.target.value as Draft['layout'] })
                     }
                   >
-                    <option value="featured">Крупная — главный акцент</option>
-                    <option value="portrait">Вертикальная</option>
-                    <option value="wide">Широкая</option>
-                    <option value="compact">Компактная</option>
+                    <option value="original">По размеру изображения — без полей</option>
+                    <option value="featured">Горизонтальная — 4:3</option>
+                    <option value="portrait">Вертикальная — 2:3</option>
+                    <option value="wide">Широкая — 16:9</option>
+                    <option value="compact">Квадратная — 1:1</option>
                   </select>
                 </label>
+                <p className="admin-cover-hint">Обложка — первый файл. Изображение показывается целиком. Если выбранный формат отличается от исходного, появятся поля.</p>
+                {draft.images[0] && <figure className={`admin-cover-preview project-${draft.layout}`}>
+                  <figcaption>Так обложка будет выглядеть на сайте</figcaption>
+                  <div className="project-open">
+                    {draft.images[0].type === 'video'
+                      ? <video src={`${draft.images[0].src}#t=0.1`} muted playsInline preload="metadata" aria-label="Предпросмотр обложки" />
+                      : <img src={draft.images[0].src} alt="Предпросмотр обложки" />}
+                  </div>
+                </figure>}
               </fieldset>
               {upload && (
                 <div className="admin-upload-status" aria-live="polite">

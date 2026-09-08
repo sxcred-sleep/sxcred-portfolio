@@ -2,7 +2,7 @@ export type ProjectImage = { src: string; alt: string; type?: 'image' | 'video';
 export type Project = {
   id: string; title: string; category: string; year: string | null;
   client: string | null; description: string; images: ProjectImage[];
-  placeholder: boolean; layout: 'featured' | 'portrait' | 'wide' | 'compact';
+  placeholder: boolean; layout: 'original' | 'featured' | 'portrait' | 'wide' | 'compact';
   art: 'dota' | 'stream' | 'social' | 'identity'; coverText: string;
 };
 export type ManagedProject = Project & { status: 'draft' | 'published'; updatedAt: number };

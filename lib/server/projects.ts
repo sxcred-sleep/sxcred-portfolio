@@ -58,7 +58,7 @@ export async function saveWork(input: Record<string, unknown>) {
     throw new HttpError(400, 'Укажите год четырьмя цифрами.');
   const client = field(input, 'client', 120);
   const description = field(input, 'description', 5000);
-  const layouts = ['featured', 'portrait', 'wide', 'compact'];
+  const layouts = ['original', 'featured', 'portrait', 'wide', 'compact'];
   if (typeof input.layout !== 'string' || !layouts.includes(input.layout))
     throw new HttpError(400, 'Выберите формат обложки.');
   if (input.status !== 'draft' && input.status !== 'published')

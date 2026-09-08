@@ -83,6 +83,12 @@ try {
   assert.ok(!(await json(await request('/api/public'))).projects.some(project => project.id === draft.id));
   await save({ ...draft, status: 'published' });
   assert.ok((await json(await request('/api/public'))).projects.some(project => project.id === draft.id));
+  for (const layout of ['original', 'featured', 'portrait', 'wide', 'compact']) {
+    const saved = await save({ ...draft, status: 'published', layout });
+    assert.equal(saved.layout, layout);
+    assert.equal((await json(await request('/api/public'))).projects.find(project => project.id === draft.id).layout, layout);
+  }
+  await json(await request('/api/admin/projects', { method: 'POST', body: JSON.stringify({ ...draft, layout: 'invalid' }) }), 400);
   const range = await request(movie.src, { headers: { Range: 'bytes=0-1023' } }, false);
   assert.equal(range.status, 206); assert.equal((await range.arrayBuffer()).byteLength, 1024);
   await save({ ...draft, status: 'draft' });
