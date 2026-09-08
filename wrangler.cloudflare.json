@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "sxcred-portfolio",
+  "main": "vinext/server/fetch-handler",
+  "compatibility_date": "2026-09-07",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "d1_databases": [{
+    "binding": "DB",
+    "database_name": "sxcred-db",
+    "database_id": "3896718f-9581-4438-b77b-0292310a7c27",
+    "migrations_dir": "drizzle"
+  }],
+  "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "sxcred-media" }]
+}
