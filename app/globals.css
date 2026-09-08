@@ -42,6 +42,12 @@ svg { flex-shrink: 0; }
 .red { color: var(--red); }.muted { color: var(--muted); }
 .outline-type { color: transparent; -webkit-text-stroke: 1.3px var(--ink); }
 .portfolio { max-width: 1920px; margin: auto; overflow: clip; }
+/* Native cursors keep the click point precise, without a tracking overlay. */
+@media (hover: hover) and (pointer: fine) and (forced-colors: none) {
+  :is(.portfolio, .portfolio-viewer, .mobile-menu) { cursor: url('/cursors/sxcred-default.svg') 3 2, auto; }
+  :is(.portfolio, .portfolio-viewer, .mobile-menu) :is(a[href], button:not(:disabled):not([aria-disabled='true'])) { cursor: url('/cursors/sxcred-pointer.svg') 3 2, pointer; }
+  :is(.portfolio, .portfolio-viewer, .mobile-menu) :is(input, textarea, [contenteditable='true']) { cursor: text; }
+}
 .section-pad { padding: 85px 5.2% 90px; }
 .skip-link { position: fixed; z-index: 100; left: 20px; top: -80px; background: var(--ink); color: white; padding: 12px 20px; }
 .skip-link:focus { top: 10px; }
