@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import './globals.css';
 export const metadata: Metadata = {
-  title: 'SXCRED | Дизайн для игровой культуры',
-  description: 'Визуальный дизайн для Dota 2, стримеров и игровых проектов. Превью, оформление трансляций, соцсети и айдентика.',
+  title: 'sxcred / design',
+  description: 'делаю дизайн с душой. оформление трансляций, веб-сайтов, соцсетей и т.д.',
   robots: { index: false, follow: false },
   icons: {
     icon: [{ url: '/favicon-claymore.png', type: 'image/png' }],
