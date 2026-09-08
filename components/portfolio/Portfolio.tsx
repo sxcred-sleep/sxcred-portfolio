@@ -1,22 +1,23 @@
 'use client';
 /* oxlint-disable next/no-img-element -- Local media are pre-optimized; explicit dimensions reserve layout. */
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ArrowDown, ArrowUpRight, ArrowUp, Plus, Minus, Pause, Play, Menu, X } from 'lucide-react';
+import { ArrowDown, ArrowUpRight, ArrowUp, Pause, Play, Menu, X } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogTrigger, DialogClose } from '@/components/ui/dialog';
 import type { ManagedClient } from '@/data/clients';
+import type { Contact } from '@/data/contacts';
 import type { Project } from '@/data/projects';
 import { navigation, services, site } from '@/data/site';
 import { AnimatedCat, LoopVideo } from './Media';
 import { ProjectArt } from './ProjectArt';
 import { ProjectViewer } from './ProjectViewer';
+import { DiscordContact } from './DiscordContact';
 
 function Chapter({ number, title }: { number: string; title: string }) {
   return <div className="chapter-line"><span className="mono">ГЛАВА {number}</span><span className="chapter-rule" /><span className="mono">{title}</span></div>;
 }
-export function Portfolio({ projects, clients }: { projects: Project[]; clients: ManagedClient[] }) {
+export function Portfolio({ projects, clients, contacts }: { projects: Project[]; clients: ManagedClient[]; contacts: Contact[] }) {
   const [paused, setPaused] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [service, setService] = useState<number | null>(0);
   const [projectIndex, setProjectIndex] = useState(0);
   const [viewerOpen, setViewerOpen] = useState(false);
   const clickedProject = useRef<HTMLElement | null>(null);
@@ -57,10 +58,10 @@ export function Portfolio({ projects, clients }: { projects: Project[]; clients:
   return <div id="top" ref={root} className={`portfolio ${paused ? 'motion-paused' : ''}`}>
     <a className="skip-link" href="#main">Перейти к содержимому</a>
     <header className="site-header">
-      <a href="#top" className="wordmark" aria-label="SXCRED, в начало">SXCRED<span>®</span></a>
+      <a href="#top" className="wordmark" aria-label="SXCRED, в начало"><img className="brand-logo" src="/media/sxcred-manga-logo.png" alt="SXCRED" width={1980} height={792} /></a>
       <nav className="desktop-nav" aria-label="Основная навигация">{navigation.map(item => <a key={item.href} href={item.href}>{item.label}<sup>{item.number}</sup></a>)}</nav>
       <div className="header-actions"><button className="motion-toggle" onClick={() => setPaused(value => !value)} aria-label={paused ? 'Включить анимацию' : 'Приостановить анимацию'} aria-pressed={paused}>{paused ? <Play size={16} /> : <Pause size={16} />}<span>Анимация</span></button>
-      <Dialog open={menuOpen} onOpenChange={setMenuOpen}><DialogTrigger className="menu-trigger" aria-label="Открыть меню"><Menu /></DialogTrigger><DialogContent className="mobile-menu" showCloseButton={false}><div className="mobile-menu-head"><DialogTitle>SXCRED®</DialogTitle><DialogClose aria-label="Закрыть меню"><X /></DialogClose></div><DialogDescription className="sr-only">Навигация по главам портфолио</DialogDescription><nav aria-label="Мобильная навигация">{navigation.map(item => <a key={item.href} href={item.href} onClick={() => setMenuOpen(false)}><span className="mono">{item.number}</span>{item.label}<ArrowUpRight /></a>)}</nav><span className="mono">ПОРТФОЛИО / {site.year}</span></DialogContent></Dialog></div>
+      <Dialog open={menuOpen} onOpenChange={setMenuOpen}><DialogTrigger className="menu-trigger" aria-label="Открыть меню"><Menu /></DialogTrigger><DialogContent className="mobile-menu" showCloseButton={false}><div className="mobile-menu-head"><DialogTitle><img className="brand-logo" src="/media/sxcred-manga-logo.png" alt="SXCRED" width={1980} height={792} /></DialogTitle><DialogClose aria-label="Закрыть меню"><X /></DialogClose></div><DialogDescription className="sr-only">Навигация по главам портфолио</DialogDescription><nav aria-label="Мобильная навигация">{navigation.map(item => <a key={item.href} href={item.href} onClick={() => setMenuOpen(false)}><span className="mono">{item.number}</span>{item.label}<ArrowUpRight /></a>)}</nav><span className="mono">ПОРТФОЛИО / {site.year}</span></DialogContent></Dialog></div>
     </header>
     <main id="main">
       <section className="cover" aria-labelledby="hero-title">
@@ -97,26 +98,33 @@ export function Portfolio({ projects, clients }: { projects: Project[]; clients:
           <div className="client-name"><h3>{client.link ? <a href={client.link} target="_blank" rel="noreferrer">{client.name}</a> : client.name}</h3><span className="mono">{client.workType || client.category}</span></div>
         </article>)}</div><p className="clients-note">Разные стили игры. Один подход к визуалу.</p>
       </section>
-      <section id="services" className="services-section section-pad">
-        <Chapter number="03" title="ЧТО Я ДЕЛАЮ" /><h2 className="section-title reveal">МОЙ <span className="outline-type">АРСЕНАЛ.</span></h2>
-        <div className="service-list">{services.map((item, index) => <div className={`service-row ${service === index ? 'service-active' : ''} reveal`} key={item.title}>
-          <h3><button aria-expanded={service === index} aria-controls={`service-${index}`} onClick={() => setService(service === index ? null : index)}><span className="mono service-number">0{index + 1}</span><span className="service-title">{item.title}</span><span className="mono service-english">{item.english}</span>{service === index ? <Minus /> : <Plus />}</button></h3>
-          <div id={`service-${index}`} className="service-description" hidden={service !== index}><p>{item.description}</p></div>
-        </div>)}</div>
+      <section id="services" className="services-section section-pad" aria-labelledby="services-title">
+        <Chapter number="03" title="УСЛУГИ И СТОИМОСТЬ" />
+        <div className="services-heading reveal"><h2 id="services-title" className="section-title">ЧТО Я <span className="outline-type">ДЕЛАЮ.</span></h2><p>Стоимость индивидуальная.<br />Обсуждаем её вместе по твоему ТЗ — до начала работы.</p></div>
+        <div className="service-grid">{services.map((item, index) => <article className="service-card reveal" key={item.title}>
+          <div className="service-card-meta mono"><span className="red">0{index + 1}</span><span>{item.english}</span></div>
+          <h3>{item.title}</h3><p className="service-card-description">{item.description}</p>
+          <div className="service-price"><span className="mono">СТОИМОСТЬ</span><strong>ИНДИВИДУАЛЬНО</strong><span>Обсуждается с заказчиком</span></div>
+        </article>)}</div>
+        <div className="service-terms reveal"><h3><span className="red" aria-hidden="true">*</span> ВАЖНО</h3><div><p className="service-brief">Работаю только по ТЗ.</p><dl>
+          <div><dt>Правки</dt><dd>В стоимость включено 2–3 круга правок.</dd></div>
+          <div><dt>Сроки</dt><dd>Простые заказы — 1–3 дня.<br />Пакеты — 5–10 рабочих дней.</dd></div>
+          <div><dt>Срочность</dt><dd>Срочные заказы — +30–50 % к стоимости.</dd></div>
+        </dl></div></div>
       </section>
       <section id="about" className="about-section section-pad">
         <Chapter number="04" title="ЗА КАДРОМ" />
-        <div className="about-layout"><div className="about-art reveal"><span className="about-art-index mono">SXCRED / ЛИЧНОЕ ДЕЛО</span><img src="/media/claymore-poster.jpg" alt="Чёрно-белая иллюстрация персонажа Claymore" loading="lazy" width={1264} height={848} /><span className="about-art-caption">БОЛЬШЕ,<br />ЧЕМ ПИКСЕЛИ.</span></div><div className="about-copy reveal"><h2>ИГРАЮ<br />НА СТОРОНЕ<br /><span className="outline-type">ДИЗАЙНА.</span></h2><p className="about-lead">{site.about}</p><p>{site.aboutDetail}</p><dl className="about-facts"><div><dt>НИКНЕЙМ</dt><dd>SXCRED</dd></div><div><dt>ОСНОВНОЙ ФОКУС</dt><dd>DOTA 2 / GAMING</dd></div><div><dt>СПЕЦИАЛИЗАЦИЯ</dt><dd>ВИЗУАЛЬНЫЙ ДИЗАЙН</dd></div></dl></div></div>
+        <div className="about-layout"><div className="about-art reveal"><span className="about-art-index mono">SXCRED / ЛИЧНОЕ ДЕЛО</span><img src="/media/claymore-poster.jpg" alt="Чёрно-белая иллюстрация персонажа Claymore" loading="lazy" width={1264} height={848} /><span className="about-art-caption">БОЛЬШЕ,<br />ЧЕМ ПИКСЕЛИ.</span></div><div className="about-copy reveal"><h2>ИГРАЮ<br />НА СТОРОНЕ<br /><span className="outline-type">ДИЗАЙНА.</span></h2><p className="about-lead">{site.about}</p><p>{site.aboutDetail}</p><div className="about-player"><div className="about-player-badges"><div className="about-rank"><img src="/media/immortal.png" alt="Медаль ранга Титан в Dota 2" width={256} height={256} loading="lazy" /><div><span className="mono">РАНГ / DOTA 2</span><strong>ТИТАН</strong></div></div><div className="about-hero"><img src="/media/invoker.png" alt="Герой Invoker из Dota 2" width={256} height={144} loading="lazy" /><div><span className="mono">ГЕРОЙ</span><strong>INVOKER</strong></div></div></div><a className="about-steam" href="https://steamcommunity.com/profiles/76561199395835195" target="_blank" rel="noreferrer">Мой профиль Steam<ArrowUpRight size={18} /></a></div><dl className="about-facts"><div><dt>НИКНЕЙМ</dt><dd>SXCRED</dd></div><div><dt>ОСНОВНОЙ ФОКУС</dt><dd>DOTA 2 / GAMING</dd></div><div><dt>СПЕЦИАЛИЗАЦИЯ</dt><dd>ВИЗУАЛЬНЫЙ ДИЗАЙН</dd></div></dl></div></div>
       </section>
       <section id="contact" className="contact-section section-pad">
         <Chapter number="05" title="ФИНАЛЬНАЯ ГЛАВА" />
         <div className="contact-heading reveal"><h2>{site.contactLine.map((line, index) => <span key={line} className={index === 1 ? 'outline-type' : ''}>{line}</span>)}</h2><ArrowUpRight className="contact-arrow" strokeWidth={1} aria-hidden="true" /></div>
-        <div className="contact-details"><p>Есть идея? Давай дадим ей форму.<br /><span className="muted">Контакты появятся здесь чуть позже.</span></p><div className="contact-links">{site.contacts.map(contact => contact.url ? <a href={contact.url} key={contact.label} target={contact.url.startsWith('mailto:') ? undefined : '_blank'} rel="noreferrer">{contact.label}<ArrowUpRight size={16} /></a> : <span className="contact-placeholder" key={contact.label} aria-label={`${contact.label}: ссылка будет добавлена`}>{contact.label}<span className="mono">СКОРО</span></span>)}</div></div>
+        <div className="contact-details"><p>Есть идея? Давай дадим ей форму.<br /><span className="muted">{contacts.some(contact => contact.url) ? 'Выбирай удобный способ связи.' : 'Контакты появятся здесь чуть позже.'}</span></p><div className="contact-links">{contacts.map(contact => contact.url ? contact.label === 'Discord' ? <DiscordContact key={contact.label} value={contact.url} /> : <a href={contact.url} key={contact.label} target={contact.url.startsWith('mailto:') ? undefined : '_blank'} rel="noreferrer">{contact.label}<ArrowUpRight size={16} /></a> : <span className="contact-placeholder" key={contact.label} aria-label={`${contact.label}: ссылка будет добавлена`}>{contact.label}<span className="mono">СКОРО</span></span>)}</div></div>
         <AnimatedCat place="contact" paused={paused || viewerOpen || menuOpen} />
         <div className="contact-tail mono"><span>СПАСИБО ЗА ПРОСМОТР. GG.</span><span>ДАЛЬШЕ ТВОЯ ИСТОРИЯ.</span></div>
       </section>
     </main>
-    <footer className="footer"><a href="#top" className="wordmark">SXCRED<span>®</span></a><span className="mono">© {site.year} SXCRED</span><a href="#top" className="back-top">Наверх <ArrowUp size={16} /></a></footer>
+    <footer className="footer"><a href="#top" className="wordmark"><img className="brand-logo" src="/media/sxcred-manga-logo.png" alt="SXCRED" width={1980} height={792} /></a><span className="mono">© {site.year} SXCRED</span><a href="#top" className="back-top">Наверх <ArrowUp size={16} /></a></footer>
     <ProjectViewer projects={projects} index={projectIndex} open={viewerOpen} onClose={closeProject} onProject={nextProject} />
   </div>;
 }

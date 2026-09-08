@@ -573,6 +573,10 @@
 .admin-roster-editor h1 { font-family:var(--font-display),sans-serif; font-size:clamp(28px,3.5vw,44px); margin:12px 0; line-height:1.2; }
 .admin-roster-editor .admin-editor-heading p { font-size:14px; color:#686864; line-height:1.6; }
 .admin-roster-fields { border:0; padding:0; margin:0; min-width:0; display:grid; gap:22px; }
+.admin-contact-fields { max-width:720px; padding:25px 0 40px; }
+.admin-contact-fields label { display:grid; gap:10px; font-size:14px; font-weight:650; }
+.admin-contact-fields input { width:100%; min-width:0; padding:14px; border:1px solid #aaa; background:#fff; font:inherit; font-weight:400; }
+.admin-section-tabs { flex-wrap:wrap; }
 .admin-client-editor { border:1px solid #c9c9c4; background:#f8f8f4; }
 .admin-client-top { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 20px; border-bottom:1px solid #c9c9c4; }
 .admin-client-top>div { display:flex; gap:7px; }

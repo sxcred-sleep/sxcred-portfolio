@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import type { ManagedProject, ProjectImage } from '@/data/projects';
 import { ClientManager } from './ClientManager';
+import { ContactManager } from './ContactManager';
 
 type Draft = Pick<
   ManagedProject,
@@ -79,7 +80,7 @@ function Preview({ file }: { file: ProjectImage }) {
     />
   );
 }
-export function AdminPanel({ view = 'works' }: { view?: 'works' | 'clients' }) {
+export function AdminPanel({ view = 'works' }: { view?: 'works' | 'clients' | 'contacts' }) {
   const [clientsDirty, setClientsDirty] = useState(false);
   const [auth, setAuth] = useState<
     'loading' | 'login' | 'ready' | 'unconfigured' | 'error'
@@ -405,6 +406,7 @@ export function AdminPanel({ view = 'works' }: { view?: 'works' | 'clients' }) {
           >
             02 / Стримеры
           </a>
+          <a href="/admin/contacts" aria-current={view === 'contacts' ? 'page' : undefined}>05 / Контакты</a>
         </nav>
       )}
       {auth !== 'ready' ? (
@@ -448,6 +450,8 @@ export function AdminPanel({ view = 'works' }: { view?: 'works' | 'clients' }) {
         </main>
       ) : view === 'clients' ? (
         <ClientManager onDirty={setClientsDirty} />
+      ) : view === 'contacts' ? (
+        <ContactManager onDirty={setClientsDirty} />
       ) : (
         <main className="admin-workspace">
           <aside className="admin-library">
