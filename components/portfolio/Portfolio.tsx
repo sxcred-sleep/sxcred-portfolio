@@ -13,6 +13,7 @@ import { ProjectViewer } from './ProjectViewer';
 import { DiscordContact } from './DiscordContact';
 import { Preloader } from './Preloader';
 import { CursorTrail } from './CursorTrail';
+import { useMasonryGrid } from '@/hooks/useMasonryGrid';
 
 function Chapter({ number, title }: { number: string; title: string }) {
   return <div className="chapter-line"><span className="mono">ГЛАВА {number}</span><span className="chapter-rule" /><span className="mono">{title}</span></div>;
@@ -21,6 +22,7 @@ function BrandMark() {
   return <svg className="brand-symbol" viewBox="0 0 40 40" fill="currentColor" aria-hidden="true" focusable="false"><rect x="16.5" y="3" width="7" height="34" /><rect x="16.5" y="3" width="7" height="34" transform="rotate(60 20 20)" /><rect x="16.5" y="3" width="7" height="34" transform="rotate(120 20 20)" /></svg>;
 }
 export function Portfolio({ projects, clients, contacts }: { projects: Project[]; clients: ManagedClient[]; contacts: Contact[] }) {
+  const workGrid = useMasonryGrid(projects);
   const [paused, setPaused] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuDestination = useRef<string | null>(null);
@@ -102,7 +104,7 @@ export function Portfolio({ projects, clients, contacts }: { projects: Project[]
         <Chapter number="01" title="АРХИВ РАБОТ" />
         <div className="work-heading reveal"><h2>ВЫБРАННЫЕ<br /><span className="outline-type">РАБОТЫ</span><sup>({String(projects.length).padStart(2, '0')})</sup></h2><div className="work-intro"><p className="work-intro-lead">Несколько проектов.<br />Разный подход к каждому.</p></div></div>
         {projects.every(project => project.placeholder) && <div className="archive-notice"><span className="red">*</span> Архив пополняется. Пока здесь демонстрационные обложки.</div>}
-        <div className="work-grid">{projects.map((project, index) => <article key={project.id} className={`project-card project-${project.layout} reveal`}>
+        <div className="work-grid" ref={workGrid}>{projects.map((project, index) => <article key={project.id} className={`project-card project-${project.layout} reveal`}>
           <button className="project-open" onClick={() => openProject(index)} aria-label={`Открыть проект: ${project.title}`}>
             {project.images.length ? project.images[0].type === 'video' ? <video src={`${project.images[0].src}#t=0.1`} muted playsInline preload="metadata" aria-label={project.images[0].alt} /> : <img src={project.images[0].src} alt={project.images[0].alt} loading="lazy" width={1200} height={800} /> : <ProjectArt project={project} />}
             <span className="project-view">Смотреть <ArrowUpRight size={18} /></span>
