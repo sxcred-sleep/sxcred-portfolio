@@ -103,12 +103,9 @@ svg { flex-shrink: 0; }
 .work-intro .work-intro-lead { margin-bottom: 0; font-size: clamp(20px, 1.65vw, 25px); font-weight: 500; line-height: 1.5; letter-spacing: -.025em; color: var(--ink); }
 .archive-notice { color: var(--muted); font-size: 12px; margin: 22px 0 40px; display: flex; gap: 9px; align-items: center; }
 .archive-notice .red { font-size: 25px; line-height: 1; }
-.work-grid { display: grid; grid-template-columns: repeat(12,minmax(0,1fr)); gap: 72px 28px; align-items: start; }
-.project-featured { grid-column: 1/9; }.project-portrait { grid-column: 9/13; margin-top: 100px; }
-.project-wide { grid-column: 1/8; margin-top: -60px; }.project-compact { grid-column: 8/13; margin-top: 60px; }
-.project-open { position: relative; width: 100%; display: block; overflow: hidden; border: 1px solid var(--ink); background: var(--ink); text-align: left; }
-.project-featured .project-open { aspect-ratio: 1.53; }.project-portrait .project-open { aspect-ratio: .72; }
-.project-wide .project-open { aspect-ratio: 1.7; }.project-compact .project-open { aspect-ratio: 1.12; }
+.work-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 40px 28px; align-items: start; }
+.project-card { min-width: 0; }
+.project-open { position: relative; width: 100%; aspect-ratio: 4/3; display: block; overflow: hidden; border: 1px solid var(--ink); background: var(--ink); text-align: left; }
 .project-open>img,.project-open>video { width: 100%; height: 100%; object-fit: cover; transition: transform 450ms var(--ease); }
 .project-art { width: 100%; height: 100%; position: relative; padding: 22px; overflow: hidden; background: #222; color: #f9f9f6; display: flex; flex-direction: column; justify-content: space-between; transition: transform 450ms var(--ease); isolation: isolate; }
 .art-topline,.art-bottomline { display: flex; align-items: center; justify-content: space-between; gap: 15px; font-family: var(--body); font-size: 10px; font-weight: 600; letter-spacing: .05em; z-index: 1; }
@@ -148,7 +145,7 @@ svg { flex-shrink: 0; }
 .avatar-1 { background: #282826; }.avatar-1 .avatar-letter { color: #deded7; -webkit-text-stroke: 0; transform: rotate(5deg); }
 .avatar-2 { background: repeating-linear-gradient(-45deg,#deded7,#deded7 3px,#e8e8e1 3px,#e8e8e1 6px); }
 .avatar-label { position: absolute; bottom: 12px; left: 12px; font-size: 9px; background: #eeeee8; padding: 4px 7px; }
-.client-avatar img { height: 100%; width: 100%; object-fit: cover; }
+.client-avatar img { height: 100%; width: 100%; object-fit: contain; object-position: right center; }
 .client-name { margin-top: 20px; }.client-name h3 { font-size: clamp(18px,2vw,32px); font-weight: 750; letter-spacing: -.04em; overflow-wrap: anywhere; }.client-name .mono { font-size: 10px; text-transform: uppercase; color: var(--muted); }
 .clients-note { margin-top: 22px; text-align: right; font-size: 13px; }
 .section-title { margin: 48px 0 55px; }
@@ -274,7 +271,7 @@ svg { flex-shrink: 0; }
   .cat-track-hero { bottom: 36px; }.cat-rider .cat-image { width: 95px; height: 75px; }.cat-rider { animation-duration: 15s; animation-delay: -2s; }
   .work-heading { display: block; margin-bottom: 18px; }.work-heading h2,.section-title { font-size: 15vw; line-height: 1.08; }.work-heading h2 sup { font-size: 12px; margin-left: 12px; }.work-intro { max-width: 420px; margin: 24px 0 0; }.work-intro .work-intro-lead { margin-bottom: 0; }
   .archive-notice { margin: 20px 0 28px; font-size: 11px; align-items: flex-start; max-width: 320px; }
-  .work-grid { grid-template-columns: 1fr; gap: 34px; }.project-card { grid-column: auto; margin: 0; }.project-featured .project-open { aspect-ratio: 1.3; }.project-portrait { width: 86%; justify-self: end; }.project-portrait .project-open { aspect-ratio: .92; }.project-wide .project-open { aspect-ratio: 1.4; }.project-compact { width: 90%; }.project-compact .project-open { aspect-ratio: 1.15; }
+  .work-grid { grid-template-columns: 1fr; gap: 34px; }
   .project-art { padding: 17px; }.art-type { font-size: 25vw; }.art-stream .art-type { font-size: 25vw; }.art-social .art-type,.art-identity .art-type { font-size: 19vw; }.art-topline,.art-bottomline { font-size: 8px; }.art-topline>span:first-child { font-size: 12px; }
   .project-view { opacity: 1; transform: none; padding: 8px 10px; font-size: 10px; gap: 9px; bottom: 12px; right: 12px; }.project-caption { padding-top: 13px; }.project-caption .mono { font-size: 8px; }.project-caption h3 { font-size: 15px; }
   .archive-end { margin-top: 35px; font-size: 8px; gap: 16px; }
