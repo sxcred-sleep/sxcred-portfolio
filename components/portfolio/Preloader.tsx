@@ -51,7 +51,7 @@ export function Preloader() {
 
   if (phase === 'done') return null;
   return <div className="site-preloader" data-phase={phase}>
-    <div className="preloader-meta mono" aria-hidden="true"><span>НЕЗАВИСИМЫЙ ДИЗАЙНЕР</span><span>ПОРТФОЛИО / {site.year}</span></div>
+    <div className="preloader-meta mono" aria-hidden="true"><span>ПОРТФОЛИО / {site.year}</span></div>
     <div className="preloader-center">
       <div className="preloader-wordmark" aria-hidden="true">SXCRED<span>*</span></div>
       <div className="preloader-caption mono"><output>Загружаю портфолио</output><span aria-hidden="true">{String(progress).padStart(2, '0')}%</span></div>

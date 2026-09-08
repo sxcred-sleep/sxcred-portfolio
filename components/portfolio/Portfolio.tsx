@@ -12,9 +12,13 @@ import { ProjectArt } from './ProjectArt';
 import { ProjectViewer } from './ProjectViewer';
 import { DiscordContact } from './DiscordContact';
 import { Preloader } from './Preloader';
+import { CursorTrail } from './CursorTrail';
 
 function Chapter({ number, title }: { number: string; title: string }) {
   return <div className="chapter-line"><span className="mono">ГЛАВА {number}</span><span className="chapter-rule" /><span className="mono">{title}</span></div>;
+}
+function BrandMark() {
+  return <svg className="brand-symbol" viewBox="0 0 40 40" fill="currentColor" aria-hidden="true" focusable="false"><rect x="16.5" y="3" width="7" height="34" /><rect x="16.5" y="3" width="7" height="34" transform="rotate(60 20 20)" /><rect x="16.5" y="3" width="7" height="34" transform="rotate(120 20 20)" /></svg>;
 }
 export function Portfolio({ projects, clients, contacts }: { projects: Project[]; clients: ManagedClient[]; contacts: Contact[] }) {
   const [paused, setPaused] = useState(false);
@@ -75,16 +79,17 @@ export function Portfolio({ projects, clients, contacts }: { projects: Project[]
   const nextProject = (index: number) => { window.history.replaceState(null, '', `#project/${projects[index].id}`); setProjectIndex(index); };
   return <div id="top" ref={root} className={`portfolio ${paused ? 'motion-paused' : ''}`}>
     <Preloader />
+    <CursorTrail paused={paused} />
     <a className="skip-link" href="#main">Перейти к содержимому</a>
     <header className="site-header">
-      <a href="#top" className="wordmark" aria-label="SXCRED, в начало"><img className="brand-logo" src="/media/sxcred-manga-logo.png" alt="SXCRED" width={1980} height={792} /></a>
+      <a href="#top" className="header-brand" aria-label="SXCRED, в начало"><BrandMark /></a>
       <nav className="desktop-nav" aria-label="Основная навигация">{navigation.map(item => <a key={item.href} href={item.href}>{item.label}<sup>{item.number}</sup></a>)}</nav>
       <div className="header-actions"><button className="motion-toggle" onClick={() => setPaused(value => !value)} aria-label={paused ? 'Включить анимацию' : 'Приостановить анимацию'} aria-pressed={paused}>{paused ? <Play size={16} /> : <Pause size={16} />}<span>Анимация</span></button>
-      <Dialog open={menuOpen} onOpenChange={setMenuOpen} onOpenChangeComplete={finishMenuChange}><DialogTrigger className="menu-trigger" aria-label="Открыть меню"><Menu /></DialogTrigger><DialogContent fullscreen className="mobile-menu" showCloseButton={false}><div className="mobile-menu-head"><DialogTitle><img className="brand-logo" src="/media/sxcred-manga-logo.png" alt="SXCRED" width={1980} height={792} /></DialogTitle><DialogClose aria-label="Закрыть меню"><X /></DialogClose></div><DialogDescription className="sr-only">Навигация по главам портфолио</DialogDescription><nav aria-label="Мобильная навигация">{navigation.map(item => <a key={item.href} href={item.href} onClick={event => { event.preventDefault(); menuDestination.current = item.href; setMenuOpen(false); }}><span className="mono">{item.number}</span>{item.label}<ArrowUpRight /></a>)}</nav><span className="mono">ПОРТФОЛИО / {site.year}</span></DialogContent></Dialog></div>
+      <Dialog open={menuOpen} onOpenChange={setMenuOpen} onOpenChangeComplete={finishMenuChange}><DialogTrigger className="menu-trigger" aria-label="Открыть меню"><Menu /></DialogTrigger><DialogContent fullscreen className="mobile-menu" showCloseButton={false}><div className="mobile-menu-head"><DialogTitle><BrandMark /><span className="sr-only">SXCRED — меню</span></DialogTitle><DialogClose aria-label="Закрыть меню"><X /></DialogClose></div><DialogDescription className="sr-only">Навигация по главам портфолио</DialogDescription><nav aria-label="Мобильная навигация">{navigation.map(item => <a key={item.href} href={item.href} onClick={event => { event.preventDefault(); menuDestination.current = item.href; setMenuOpen(false); }}><span className="mono">{item.number}</span>{item.label}<ArrowUpRight /></a>)}</nav><span className="mono">ПОРТФОЛИО / {site.year}</span></DialogContent></Dialog></div>
     </header>
     <main id="main">
       <section className="cover" aria-labelledby="hero-title">
-        <div className="cover-meta mono"><span>НЕЗАВИСИМЫЙ ДИЗАЙНЕР</span><span>ПОРТФОЛИО / {site.year}</span></div>
+        <div className="cover-meta mono"><span>ПОРТФОЛИО / {site.year}</span></div>
         <div className="cover-frame" aria-hidden="true" /><span className="cover-chapter mono">00 / НАЧАЛО</span>
         <h1 id="hero-title" className="cover-title">SXCRED<span className="title-star">*</span></h1>
         <div className="cover-character"><LoopVideo kind="claymore" paused={paused || viewerOpen || menuOpen} priority /></div>
@@ -95,7 +100,7 @@ export function Portfolio({ projects, clients, contacts }: { projects: Project[]
       </section>
       <section id="work" className="work-section section-pad">
         <Chapter number="01" title="АРХИВ РАБОТ" />
-        <div className="work-heading reveal"><h2>ВЫБРАННЫЕ<br /><span className="outline-type">РАБОТЫ</span><sup>({String(projects.length).padStart(2, '0')})</sup></h2><p>Каждая работа:<br />отдельная история.</p></div>
+        <div className="work-heading reveal"><h2>ВЫБРАННЫЕ<br /><span className="outline-type">РАБОТЫ</span><sup>({String(projects.length).padStart(2, '0')})</sup></h2><div className="work-intro"><p className="work-intro-lead">Несколько проектов.<br />Разный подход к каждому.</p></div></div>
         {projects.every(project => project.placeholder) && <div className="archive-notice"><span className="red">*</span> Архив пополняется. Пока здесь демонстрационные обложки.</div>}
         <div className="work-grid">{projects.map((project, index) => <article key={project.id} className={`project-card project-${project.layout} reveal`}>
           <button className="project-open" onClick={() => openProject(index)} aria-label={`Открыть проект: ${project.title}`}>
